@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import "react-native-gesture-handler";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import ArtworksList from "./src/components/ArtworksList";
+import ArtworkDetails from "./src/components/ArtworkDetails";
+import Bookmarks from "./src/components/Bookmarks";
+import { AppProvider } from "./src/contexts/AppContext";
+import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 
-export default function App() {
+export type RootStackParamList = {
+  ArtworksList: undefined;
+  ArtworkDetails: { artwork: Artwork };
+  Bookmarks: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
+
+const App: React.FC = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AppProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="ArtworksList">
+          <Stack.Screen
+            name="ArtworksList"
+            component={gestureHandlerRootHOC(ArtworksList)}
+            options={{ title: "Artworks" }}
+          />
+          <Stack.Screen
+            name="ArtworkDetails"
+            component={gestureHandlerRootHOC(ArtworkDetails)}
+            options={{ title: "Artwork Details" }}
+          />
+          <Stack.Screen
+            name="Bookmarks"
+            component={gestureHandlerRootHOC(Bookmarks)}
+            options={{ title: "Bookmarks" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AppProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default gestureHandlerRootHOC(App);
