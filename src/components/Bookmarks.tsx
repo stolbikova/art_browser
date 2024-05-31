@@ -1,36 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React from "react";
+import { View, FlatList, Image, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-interface Artwork {
-  id: number;
-  title: string;
-  image_id: string;
-  is_public_domain: boolean;
-  on_view: boolean;
-}
+import { StackNavigationProp } from "@react-navigation/stack";
 
-const Bookmarks: React.FC = () => {
-  const [bookmarkedArtworks, setBookmarkedArtworks] = useState<Artwork[]>([]);
+import { useAppContext } from "../contexts/AppContext";
+import { RootStackParamList } from "../../App";
 
-  useEffect(() => {
-    const loadBookmarks = async () => {
-      let bookmarks = await AsyncStorage.getItem("bookmarks");
-      bookmarks = bookmarks ? JSON.parse(bookmarks) : [];
-      setBookmarkedArtworks(bookmarks);
-    };
-    loadBookmarks();
-  }, []);
+import styles from "../styles/bookmarksStyles";
 
+type ArtworksListNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "ArtworkDetails"
+>;
+
+const Bookmarks = () => {
+  const { state } = useAppContext();
+
+  const navigation = useNavigation<ArtworksListNavigationProp>();
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
-        data={bookmarkedArtworks}
+        data={Array.from(state.bookmarks.values())}
         keyExtractor={(item) => item.id.toString()}
+        numColumns={3}
         renderItem={({ item }) => (
-          <View>
-            <Text>{item.title}</Text>
-          </View>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("ArtworkDetails", { artwork: item })
+            }
+          >
+            <View>
+              <Image
+                source={{
+                  uri: item.image_url,
+                }}
+                style={styles.itemImage}
+              />
+            </View>
+          </TouchableOpacity>
         )}
       />
     </View>

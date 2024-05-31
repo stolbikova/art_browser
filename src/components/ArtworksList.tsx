@@ -1,70 +1,124 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, Button, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Button,
+  TouchableOpacity,
+  TextInput,
+  Switch,
+  Image,
+} from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
+
+import { Artwork } from "../types";
 import { fetchArtworks } from "../services/api";
 import { useAppContext } from "../contexts/AppContext";
-import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
-import { StackNavigationProp } from "@react-navigation/stack";
 
-interface Artwork {
-  id: number;
-  title: string;
-  image_id: string;
-  is_public_domain: boolean;
-  on_view: boolean;
-}
+import styles from "../styles/artworksListStyles";
 
 type ArtworksListNavigationProp = StackNavigationProp<
   RootStackParamList,
   "ArtworkDetails"
 >;
 
-const ArtworksList: React.FC = () => {
+const DEFAULT_PAGE = 1;
+
+const ArtworksList = () => {
   const { state, setState } = useAppContext();
+
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [query, setQuery] = useState<string>("");
+
   const navigation = useNavigation<ArtworksListNavigationProp>();
 
   useEffect(() => {
-    const loadArtworks = async () => {
-      setLoading(true);
-      const data = await fetchArtworks(
-        state.query,
-        state.page,
-        state.publicDomain,
-        state.onView
-      );
-      setArtworks(data.data);
-      setLoading(false);
-    };
-    loadArtworks();
+    loadArtworks(state.query, state.publicDomain, state.onView);
   }, [state.query, state.page, state.publicDomain, state.onView]);
 
-  const handleNextPage = () => {
-    setState((prev) => ({ ...prev, page: prev.page + 1 }));
+  const loadArtworks = async (
+    searchQuery: string,
+    publicDomain?: boolean,
+    onView?: boolean
+  ) => {
+    setLoading(true);
+    const data = await fetchArtworks(
+      searchQuery,
+      state.page,
+      publicDomain,
+      onView
+    );
+    setArtworks(data.data as Artwork[]);
+    setLoading(false);
   };
 
-  const handlePreviousPage = () => {
-    if (state.page > 1) {
-      setState((prev) => ({ ...prev, page: prev.page - 1 }));
-    }
+  const handleUpdateState = (type: string, value: any) => {
+    setState((prev) => ({
+      ...prev,
+      [type]: value,
+      ...(type !== "page" && { page: DEFAULT_PAGE }),
+    }));
   };
 
   return (
-    <View>
+    <View style={styles.container}>
+      <View style={styles.searchBarContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search artworks"
+          value={query}
+          onChangeText={setQuery}
+          onSubmitEditing={() => handleUpdateState("query", query)}
+        />
+        <TouchableOpacity onPress={() => handleUpdateState("query", query)}>
+          <Image
+            source={require("../../assets/search.png")}
+            style={[styles.icon, loading && styles.disabled]}
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.filters}>
+        <View>
+          <Text style={styles.filterLabel}>Public Domain</Text>
+          <Switch
+            value={state.publicDomain}
+            onValueChange={(value) => handleUpdateState("publicDomain", value)}
+          />
+        </View>
+        <View>
+          <Text style={styles.filterLabel}>On View</Text>
+          <Switch
+            value={state.onView}
+            onValueChange={(value) => handleUpdateState("onView", value)}
+          />
+        </View>
+      </View>
       {loading ? (
-        <Text>Loading...</Text>
+        <View style={styles.loader}>
+          <Text>Loading...</Text>
+        </View>
       ) : (
         <FlatList
           data={artworks}
           keyExtractor={(item) => item.id.toString()}
+          numColumns={3}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("ArtworkDetails", { artwork: item })
               }
             >
-              <Text>{item.title}</Text>
+              <View style={styles.item}>
+                <Image
+                  source={{
+                    uri: item.image_url,
+                  }}
+                  style={styles.itemImage}
+                />
+              </View>
             </TouchableOpacity>
           )}
         />
@@ -72,10 +126,14 @@ const ArtworksList: React.FC = () => {
       <View>
         <Button
           title="Previous"
-          onPress={handlePreviousPage}
-          disabled={state.page === 1}
+          onPress={() => handleUpdateState("page", state.page - 1)}
+          disabled={state.page === 1 || loading}
         />
-        <Button title="Next" onPress={handleNextPage} />
+        <Button
+          title="Next"
+          onPress={() => handleUpdateState("page", state.page + 1)}
+          disabled={loading}
+        />
       </View>
     </View>
   );

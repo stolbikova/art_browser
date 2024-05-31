@@ -1,12 +1,16 @@
-import "react-native-gesture-handler";
 import React from "react";
+import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+import Icon from "react-native-vector-icons/Ionicons";
+
 import ArtworksList from "./src/components/ArtworksList";
 import ArtworkDetails from "./src/components/ArtworkDetails";
 import Bookmarks from "./src/components/Bookmarks";
 import { AppProvider } from "./src/contexts/AppContext";
-import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+import { Artwork } from "./src/types";
 
 export type RootStackParamList = {
   ArtworksList: undefined;
@@ -15,28 +19,56 @@ export type RootStackParamList = {
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
 
-const App: React.FC = () => {
+const ArtworksStack = () => (
+  <Stack.Navigator initialRouteName="ArtworksList">
+    <Stack.Screen
+      name="ArtworksList"
+      component={gestureHandlerRootHOC(ArtworksList)}
+      options={{ title: "Artworks" }}
+    />
+    <Stack.Screen
+      name="ArtworkDetails"
+      component={gestureHandlerRootHOC(ArtworkDetails)}
+      options={{ title: "Artwork Details" }}
+    />
+  </Stack.Navigator>
+);
+
+const App = () => {
   return (
     <AppProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="ArtworksList">
-          <Stack.Screen
-            name="ArtworksList"
-            component={gestureHandlerRootHOC(ArtworksList)}
-            options={{ title: "Artworks" }}
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+
+              if (route.name === "Home") {
+                iconName = focused ? "home" : "home-outline";
+              } else if (route.name === "Bookmarks") {
+                iconName = focused ? "bookmark" : "bookmark-outline";
+              }
+
+              if (iconName)
+                return <Icon name={iconName} size={size} color={color} />;
+            },
+          })}
+        >
+          <Tab.Screen
+            name="Home"
+            options={{
+              headerShown: false,
+            }}
+            component={ArtworksStack}
           />
-          <Stack.Screen
-            name="ArtworkDetails"
-            component={gestureHandlerRootHOC(ArtworkDetails)}
-            options={{ title: "Artwork Details" }}
-          />
-          <Stack.Screen
+          <Tab.Screen
             name="Bookmarks"
             component={gestureHandlerRootHOC(Bookmarks)}
             options={{ title: "Bookmarks" }}
           />
-        </Stack.Navigator>
+        </Tab.Navigator>
       </NavigationContainer>
     </AppProvider>
   );
