@@ -2,47 +2,53 @@ import React from "react";
 import { View, Text, Button, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { RootStackParamList } from "../../App";
 
-interface Artwork {
-  id: number;
-  title: string;
-  image_id: string;
-  is_public_domain: boolean;
-  on_view: boolean;
-}
+import { RootStackParamList } from "../../App";
+import { useAppContext } from "../contexts/AppContext";
+
+import styles from "../styles/artworkDetailsStyles";
 
 type ArtworkDetailsRouteProp = RouteProp<RootStackParamList, "ArtworkDetails">;
 
-const ArtworkDetails: React.FC = () => {
+const ArtworkDetails = () => {
   const route = useRoute<ArtworkDetailsRouteProp>();
   const { artwork } = route.params;
+  const { state, setState } = useAppContext();
 
-  const handleBookmark = async () => {
-    let bookmarks = await AsyncStorage.getItem("bookmarks");
-    bookmarks = bookmarks ? JSON.parse(bookmarks) : [];
-    bookmarks.push(artwork);
-    await AsyncStorage.setItem("bookmarks", JSON.stringify(bookmarks));
-  };
+  const handleBookmarkToggle = async () => {
+    const newBookmarks = new Map(state.bookmarks);
 
-  const handleUnbookmark = async () => {
-    let bookmarks = await AsyncStorage.getItem("bookmarks");
-    bookmarks = bookmarks ? JSON.parse(bookmarks) : [];
-    bookmarks = bookmarks.filter((item: Artwork) => item.id !== artwork.id);
-    await AsyncStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+    if (!newBookmarks.has(artwork.id)) {
+      newBookmarks.set(artwork.id, artwork);
+    } else {
+      newBookmarks.delete(artwork.id);
+    }
+
+    await AsyncStorage.setItem(
+      "bookmarks",
+      JSON.stringify(Array.from(newBookmarks.values()))
+    );
+    setState((prev) => ({ ...prev, bookmarks: newBookmarks }));
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <Image
         source={{
-          uri: `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`,
+          uri: artwork.image_url,
         }}
-        style={{ width: 300, height: 300 }}
+        style={styles.image}
+        resizeMode="cover"
       />
+
+      <Text style={styles.artist}>{artwork.artist_display}</Text>
       <Text>{artwork.title}</Text>
-      <Button title="Bookmark" onPress={handleBookmark} />
-      <Button title="Unbookmark" onPress={handleUnbookmark} />
+      <View style={styles.buttonWrap}>
+        <Button
+          title={state.bookmarks.has(artwork.id) ? "Unbookmark" : "Bookmark"}
+          onPress={handleBookmarkToggle}
+        />
+      </View>
     </View>
   );
 };
