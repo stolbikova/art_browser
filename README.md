@@ -48,7 +48,9 @@ yarn install
 
 ## Running the Application
 
+```
 yarn start
+```
 
 ### Building for Production
 
