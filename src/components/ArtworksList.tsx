@@ -31,7 +31,7 @@ const ArtworksList = () => {
 
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [query, setQuery] = useState<string>("");
+  const [query, setQuery] = useState<string>(state.query);
 
   const navigation = useNavigation<ArtworksListNavigationProp>();
 
@@ -105,6 +105,7 @@ const ArtworksList = () => {
           data={artworks}
           keyExtractor={(item) => item.id.toString()}
           numColumns={3}
+          style={styles.itemContainer}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() =>

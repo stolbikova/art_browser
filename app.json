@@ -22,6 +22,18 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2f5729f3-c5fe-4cef-a9a1-46e5fd413754"
+      }
+    },
+    "owner": "stolbikova",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/2f5729f3-c5fe-4cef-a9a1-46e5fd413754"
     }
   }
 }

@@ -24,6 +24,7 @@ const Bookmarks = () => {
         data={Array.from(state.bookmarks.values())}
         keyExtractor={(item) => item.id.toString()}
         numColumns={3}
+        style={styles.itemContainer}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() =>

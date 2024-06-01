@@ -9,7 +9,10 @@ const bookmarksStyles = StyleSheet.create({
     alignItems: "center",
     padding: SIZES.MEDIUM,
   },
-  itemImage: { width: 100, height: 100, margin: SIZES.MEDIUM },
+  itemImage: { width: 100, height: 100, margin: SIZES.SMALL },
+  itemContainer: {
+    width: "100%",
+  },
 });
 
 export default bookmarksStyles;

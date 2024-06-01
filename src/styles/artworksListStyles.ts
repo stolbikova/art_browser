@@ -11,7 +11,7 @@ const artworksListStyles = StyleSheet.create({
   },
   item: {
     flex: 1,
-    margin: SIZES.MEDIUM,
+    margin: SIZES.SMALL,
   },
   itemText: { overflow: "hidden" },
   itemImage: { width: 100, height: 100 },
@@ -44,8 +44,7 @@ const artworksListStyles = StyleSheet.create({
   icon: {
     width: 25,
     height: 25,
-    marginLeft: SIZES.SMALL,
-    marginBottom: SIZES.MEDIUM,
+    marginBottom: SIZES.SMALL,
   },
   disabled: {
     opacity: 0.5,
@@ -53,6 +52,9 @@ const artworksListStyles = StyleSheet.create({
   searchBarContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    width: "100%",
+  },
+  itemContainer: {
     width: "100%",
   },
 });
