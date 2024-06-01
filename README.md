@@ -8,10 +8,7 @@ Art Institute Browser is a single-page application (SPA) built with Expo and Rea
 - [Setup and Installation](#setup-and-installation)
 - [Running the Application](#running-the-application)
 - [Testing](#testing)
-- [Project Structure](#project-structure)
 - [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
@@ -49,7 +46,7 @@ npm install
 yarn install
 ```
 
-### Running the Application
+## Running the Application
 
 yarn start
 
@@ -59,7 +56,7 @@ yarn start
 expo build
 ```
 
-### Running Tests
+## Testing
 
 ```
 yarn test
