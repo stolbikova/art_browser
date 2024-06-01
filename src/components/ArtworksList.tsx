@@ -96,6 +96,7 @@ const ArtworksList = () => {
           />
         </View>
       </View>
+      {/*  */}
       {loading ? (
         <View style={styles.loader}>
           <Text>Loading...</Text>

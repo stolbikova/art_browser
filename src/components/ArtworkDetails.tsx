@@ -39,6 +39,7 @@ const ArtworkDetails = () => {
         }}
         style={styles.image}
         resizeMode="cover"
+        data-testid="artwork-image"
       />
 
       <Text style={styles.artist}>{artwork.artist_display}</Text>

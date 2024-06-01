@@ -6,7 +6,6 @@ jest.mock("@react-native-async-storage/async-storage", () => mockAsyncStorage);
 
 jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper");
 
-// Mock react-navigation's useRoute
 jest.mock("@react-navigation/native", () => {
   const actualNav = jest.requireActual("@react-navigation/native");
   return {
