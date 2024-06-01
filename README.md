@@ -79,3 +79,4 @@ yarn test
 - react-query
 - animations
 - more fancy ui
+- handle image loading fail

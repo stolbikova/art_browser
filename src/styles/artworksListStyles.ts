@@ -25,7 +25,7 @@ const artworksListStyles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     marginBottom: SIZES.MEDIUM,
-    paddingHorizontal: 10,
+    paddingHorizontal: SIZES.SMALL,
     width: "90%",
   },
   filters: {

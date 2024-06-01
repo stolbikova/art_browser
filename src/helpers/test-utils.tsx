@@ -1,4 +1,3 @@
-// test-utils.tsx
 import React, { ReactNode } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { render, RenderOptions } from "@testing-library/react-native";
