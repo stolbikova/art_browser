@@ -1,5 +1,6 @@
 import React from "react";
 import { fireEvent, act } from "@testing-library/react-native";
+
 import ArtworkDetails from "../src/components/ArtworkDetails";
 import { render } from "../src/helpers/test-utils";
 

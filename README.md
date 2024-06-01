@@ -72,3 +72,10 @@ yarn test
 - Jest - A delightful JavaScript testing framework.
 - React Native Testing Library - Simple and complete testing utilities that encourage good testing practices.
 - AsyncStorage - An asynchronous, persistent, key-value storage system for React Native.
+
+## Nice to do if there is more time
+
+- integration test
+- react-query
+- animations
+- more fancy ui

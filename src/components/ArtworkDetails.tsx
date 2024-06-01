@@ -24,11 +24,11 @@ const ArtworkDetails = () => {
       newBookmarks.delete(artwork.id);
     }
 
+    setState((prev) => ({ ...prev, bookmarks: newBookmarks }));
     await AsyncStorage.setItem(
       "bookmarks",
       JSON.stringify(Array.from(newBookmarks.values()))
     );
-    setState((prev) => ({ ...prev, bookmarks: newBookmarks }));
   };
 
   return (
