@@ -31,10 +31,10 @@ Art Institute Browser is a single-page application (SPA) built with Expo and Rea
 
 1. Clone the repository:
 
-   ```sh
-   git clone https://github.com/your-username/art-institute-browser.git
-   cd art-institute-browser
-   ```
+```
+git clone https://github.com/your-username/art-institute-browser.git
+cd art-institute-browser
+```
 
 2. Install dependencies:
 
