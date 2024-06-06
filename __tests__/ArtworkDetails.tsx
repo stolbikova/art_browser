@@ -42,30 +42,33 @@ describe("ArtworkDetails", () => {
   });
 
   test("handles bookmarking and unbookmarking", async () => {
-    let getByRole;
-    const renderResult = render(<ArtworkDetails />);
-    getByRole = renderResult.getByRole;
+    const { getByRole } = render(<ArtworkDetails />);
     const button = getByRole("button");
-    // Bookmark the artwork
 
-    // act(async () => {
-    // await fireEvent.press(button);
-    // });
-    // await waitFor(() => {
-    //   expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-    //     "bookmarks",
-    //     JSON.stringify([mockArtwork])
-    //   );
-    // });
-    //   // Unbookmark the artwork
-    //   await act(async () => {
-    //     fireEvent.press(button);
-    //   });
-    //   await waitFor(() => {
-    //     expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-    //       "bookmarks",
-    //       JSON.stringify([])
-    //     );
-    //   });
+    // Bookmark the artwork
+    act(async () => {
+      fireEvent.press(button);
+    });
+
+    console.log("Bookmark pressed, waiting for state update");
+
+    await waitFor(() => {
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "bookmarks",
+        JSON.stringify([mockArtwork])
+      );
+    }).then(() => {
+      // Unbookmark the artwork
+      act(async () => {
+        fireEvent.press(button);
+      });
+
+      waitFor(() => {
+        expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+          "bookmarks",
+          JSON.stringify([])
+        );
+      });
+    });
   });
 });

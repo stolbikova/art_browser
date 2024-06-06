@@ -6,6 +6,27 @@ jest.mock("@react-native-async-storage/async-storage", () => mockAsyncStorage);
 
 jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper");
 
+jest.mock("./src/services/api", () => ({
+  fetchArtworks: jest.fn(),
+}));
+
+jest.mock("./src/contexts/AppContext", () => {
+  const originalModule = jest.requireActual("./src/contexts/AppContext");
+  return {
+    ...originalModule,
+    useAppContext: jest.fn(() => ({
+      state: {
+        query: "",
+        page: 1,
+        publicDomain: false,
+        onView: false,
+        bookmarks: new Map(),
+      },
+      setState: jest.fn(),
+    })),
+  };
+});
+
 jest.mock("@react-navigation/native", () => {
   const actualNav = jest.requireActual("@react-navigation/native");
   return {
