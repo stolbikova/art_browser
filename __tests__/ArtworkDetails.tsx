@@ -50,9 +50,7 @@ describe("ArtworkDetails", () => {
       fireEvent.press(button);
     });
 
-    console.log("Bookmark pressed, waiting for state update");
-
-    await waitFor(() => {
+    waitFor(() => {
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "bookmarks",
         JSON.stringify([mockArtwork])
