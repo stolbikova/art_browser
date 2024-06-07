@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, act } from "@testing-library/react-native";
+import { fireEvent, act, waitFor } from "@testing-library/react-native";
 
 import ArtworksList from "../src/components/ArtworksList";
 import { render } from "../src/helpers/test-utils";
@@ -41,6 +41,10 @@ describe("ArtworksList Component", () => {
       // Simulate a search action
       fireEvent.changeText(searchInput, "Mona Lisa");
       fireEvent(searchInput, "submitEditing");
+    });
+
+    waitFor(() => {
+      expect(searchInput).toBe("Mona Lisa");
     });
   });
 });
