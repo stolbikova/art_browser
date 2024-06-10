@@ -31,6 +31,7 @@ jest.mock("@react-navigation/native", () => {
   const actualNav = jest.requireActual("@react-navigation/native");
   return {
     ...actualNav,
+    useNavigation: jest.fn(),
     useRoute: jest.fn().mockReturnValue({
       params: {
         artwork: {

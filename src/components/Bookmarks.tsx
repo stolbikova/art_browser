@@ -37,6 +37,7 @@ const Bookmarks = () => {
                   uri: item.image_url,
                 }}
                 style={styles.itemImage}
+                testID={`image-${item.id}`}
               />
             </View>
           </TouchableOpacity>

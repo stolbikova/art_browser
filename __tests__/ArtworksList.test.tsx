@@ -37,7 +37,7 @@ describe("ArtworksList Component", () => {
     const searchInput = getByPlaceholderText("Search artworks");
     expect(searchInput).toBeTruthy();
 
-    act(async () => {
+    act(() => {
       // Simulate a search action
       fireEvent.changeText(searchInput, "Mona Lisa");
       fireEvent(searchInput, "submitEditing");
