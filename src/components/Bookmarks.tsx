@@ -1,6 +1,5 @@
 import React from "react";
 import { View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import { useAppContext } from "../contexts/AppContext";
@@ -17,7 +16,6 @@ type ArtworksListNavigationProp = StackNavigationProp<
 const Bookmarks = () => {
   const { state } = useAppContext();
 
-  const navigation = useNavigation<ArtworksListNavigationProp>();
   return (
     <View style={styles.container}>
       <ImagesList artworks={Array.from(state.bookmarks.values())} />
