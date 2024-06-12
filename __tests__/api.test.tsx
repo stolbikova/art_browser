@@ -1,5 +1,6 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
+
 const { fetchArtworks } = jest.requireActual("../src/services/api");
 import { Artwork } from "../src/types";
 

@@ -1,11 +1,10 @@
 import React from "react";
 import { fireEvent, act, waitFor } from "@testing-library/react-native";
 
-import ArtworksList from "../src/components/ArtworksList";
 import { render } from "../src/helpers/test-utils";
 import { fetchArtworks } from "../src/services/api";
-
 import { useAppContext } from "../src/contexts/AppContext";
+import SearchPanel from "../src/components/SearchPanel";
 
 const mockArtworks = [
   {
@@ -13,6 +12,9 @@ const mockArtworks = [
     title: "Mona Lisa",
     artist_display: "Leonardo da Vinci",
     image_url: "http://example.com/mona-lisa.jpg",
+    is_public_domain: false,
+    is_on_view: false,
+    image_id: "",
   },
 ];
 
@@ -32,7 +34,7 @@ describe("ArtworksList Component", () => {
   });
 
   test("renders ArtworksList correctly", async () => {
-    const { getByPlaceholderText, getByText } = render(<ArtworksList />);
+    const { getByPlaceholderText } = render(<SearchPanel loading={false} />);
 
     const searchInput = getByPlaceholderText("Search artworks");
     expect(searchInput).toBeTruthy();

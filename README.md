@@ -55,7 +55,7 @@ yarn start
 ### Building for Production
 
 ```
-expo build
+eas build:configure
 ```
 
 ## Testing
