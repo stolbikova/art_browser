@@ -14,7 +14,6 @@ const ArtworkDetails = () => {
   const { artwork } = route.params;
   const { bookmarks, addBookmark, removeBookmark } = useAppStore();
 
-  console.log("ARTWORK", artwork);
   const handleBookmarkToggle = () => {
     if (bookmarks.has(artwork.id)) {
       removeBookmark(artwork.id);
