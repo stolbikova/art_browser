@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { render, RenderOptions } from "@testing-library/react-native";
+import { render, RenderOptions, act } from "@testing-library/react-native";
 import { AppProvider } from "../contexts/AppContext";
 
 interface AllProvidersProps {
@@ -16,7 +16,7 @@ const AllProviders: React.FC<AllProvidersProps> = ({ children }) => (
 const customRender = (
   ui: React.ReactElement,
   options?: Omit<RenderOptions, "wrapper">
-) => render(ui, { wrapper: AllProviders, ...options });
+) => act(async () => await render(ui, { wrapper: AllProviders, ...options }));
 
 export * from "@testing-library/react-native";
 export { customRender as render };

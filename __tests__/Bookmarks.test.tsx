@@ -12,6 +12,27 @@ const mockedUseAppContext = useAppContext as jest.Mock;
 jest.mock("@react-navigation/native");
 const mockedUseNavigation = useNavigation as jest.Mock;
 
+const BOOKMARKS = [
+  {
+    id: 1,
+    title: "Mona Lisa",
+    image_id: "mock-image-id",
+    is_public_domain: true,
+    on_view: true,
+    artist_display: "Leonardo da Vinci",
+    image_url: "http://example.com/mona-lisa.jpg",
+  },
+
+  {
+    id: 2,
+    title: "Starry Night",
+    image_id: "mock-image-id-2",
+    is_public_domain: true,
+    on_view: true,
+    artist_display: "Vincent van Gogh",
+    image_url: "http://example.com/starry-night.jpg",
+  },
+];
 describe("Bookmarks Component", () => {
   const mockNavigate = jest.fn();
 
@@ -20,30 +41,8 @@ describe("Bookmarks Component", () => {
     mockedUseAppContext.mockReturnValue({
       state: {
         bookmarks: new Map([
-          [
-            1,
-            {
-              id: 1,
-              title: "Mona Lisa",
-              image_id: "mock-image-id",
-              is_public_domain: true,
-              on_view: true,
-              artist_display: "Leonardo da Vinci",
-              image_url: "http://example.com/mona-lisa.jpg",
-            },
-          ],
-          [
-            2,
-            {
-              id: 2,
-              title: "Starry Night",
-              image_id: "mock-image-id-2",
-              is_public_domain: true,
-              on_view: true,
-              artist_display: "Vincent van Gogh",
-              image_url: "http://example.com/starry-night.jpg",
-            },
-          ],
+          [1, BOOKMARKS[0]],
+          [2, BOOKMARKS[1]],
         ]),
       },
     });
@@ -53,28 +52,20 @@ describe("Bookmarks Component", () => {
     jest.clearAllMocks();
   });
 
-  test("renders bookmarked artworks correctly", () => {
+  test("renders bookmarked artworks correctly", async () => {
     const { getByTestId } = render(<Bookmarks />);
     expect(getByTestId("image-1")).toBeTruthy();
     expect(getByTestId("image-2")).toBeTruthy();
   });
 
-  test("navigates to ArtworkDetails on item press", () => {
+  test("navigates to ArtworkDetails on item press", async () => {
     const { getByTestId } = render(<Bookmarks />);
     act(() => {
       fireEvent.press(getByTestId("image-1"));
     });
-    waitFor(() => {
+    await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith("ArtworkDetails", {
-        artwork: {
-          id: 1,
-          title: "Mona Lisa",
-          image_id: "mock-image-id",
-          is_public_domain: true,
-          on_view: true,
-          artist_display: "Leonardo da Vinci",
-          image_url: "http://example.com/mona-lisa.jpg",
-        },
+        artwork: BOOKMARKS[0],
       });
     });
   });

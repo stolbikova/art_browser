@@ -68,8 +68,8 @@ yarn test
 
 - Expo - A framework and platform for universal React applications.
 - React Native - A framework for building native apps using React.
-- TypeScript - A typed superset of JavaScript.
-- Jest - A delightful JavaScript testing framework.
+- TypeScript - types for JavaScript.
+- Jest - A JavaScript testing framework.
 - React Native Testing Library - Simple and complete testing utilities that encourage good testing practices.
 - AsyncStorage - An asynchronous, persistent, key-value storage system for React Native.
 

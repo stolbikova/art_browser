@@ -1,9 +1,8 @@
 import React from "react";
-import { fireEvent, waitFor, act } from "@testing-library/react-native";
+import { fireEvent, waitFor, act, render } from "@testing-library/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import ArtworkDetails from "../src/components/ArtworkDetails";
-import { render } from "../src/helpers/test-utils";
 
 const mockArtwork = {
   id: 1,
@@ -27,10 +26,7 @@ describe("ArtworkDetails", () => {
   });
 
   test("renders ArtworkDetails correctly", async () => {
-    let getByText, getByTestId;
-    const renderResult = render(<ArtworkDetails />);
-    getByText = renderResult.getByText;
-    getByTestId = renderResult.getByTestId;
+    let { getByText, getByTestId } = render(<ArtworkDetails />);
 
     if (getByText) {
       expect(getByText("Mona Lisa")).toBeTruthy();
@@ -42,31 +38,34 @@ describe("ArtworkDetails", () => {
   });
 
   test("handles bookmarking and unbookmarking", async () => {
-    const { getByRole } = render(<ArtworkDetails />);
+    let { getByRole } = render(<ArtworkDetails />);
     const button = getByRole("button");
 
     // Bookmark the artwork
-    act(async () => {
+    await act(() => {
       fireEvent.press(button);
     });
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "bookmarks",
         JSON.stringify([mockArtwork])
       );
-    }).then(() => {
-      // Unbookmark the artwork
-      act(async () => {
-        fireEvent.press(button);
-      });
+    });
+    await waitFor(() => {
+      expect(button).toHaveTextContent("Unbookmark");
+    });
 
-      waitFor(() => {
-        expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-          "bookmarks",
-          JSON.stringify([])
-        );
-      });
+    // Unbookmark the artwork
+    await act(async () => {
+      fireEvent.press(button);
+    });
+
+    await waitFor(() => {
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "bookmarks",
+        JSON.stringify([])
+      );
     });
   });
 });

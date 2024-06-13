@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
+import { render, fireEvent, act } from "@testing-library/react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import ImagesList from "../src/components/ImagesList";
@@ -48,12 +48,14 @@ describe("ImagesList Component", () => {
     });
   });
 
-  test("navigates to ArtworkDetails on image press", () => {
+  test("navigates to ArtworkDetails on image press", async () => {
     const { getByTestId } = render(<ImagesList artworks={mockArtworks} />);
 
-    fireEvent.press(getByTestId("image-1"));
+    act(() => {
+      fireEvent.press(getByTestId("image-1"));
+    });
 
-    expect(mockNavigate).toHaveBeenCalledWith("ArtworkDetails", {
+    await expect(mockNavigate).toHaveBeenCalledWith("ArtworkDetails", {
       artwork: mockArtworks[0],
     });
   });

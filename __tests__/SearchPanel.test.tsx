@@ -1,7 +1,12 @@
 import React from "react";
-import { fireEvent, act, waitFor } from "@testing-library/react-native";
+import {
+  fireEvent,
+  act,
+  waitFor,
+  render,
+  screen,
+} from "@testing-library/react-native";
 
-import { render } from "../src/helpers/test-utils";
 import { fetchArtworks } from "../src/services/api";
 import { useAppContext } from "../src/contexts/AppContext";
 import SearchPanel from "../src/components/SearchPanel";
@@ -39,14 +44,14 @@ describe("ArtworksList Component", () => {
     const searchInput = getByPlaceholderText("Search artworks");
     expect(searchInput).toBeTruthy();
 
-    act(() => {
+    await act(() => {
       // Simulate a search action
       fireEvent.changeText(searchInput, "Mona Lisa");
       fireEvent(searchInput, "submitEditing");
     });
 
-    waitFor(() => {
-      expect(searchInput).toBe("Mona Lisa");
+    await waitFor(() => {
+      expect(searchInput.props.value).toBe("Mona Lisa");
     });
   });
 });

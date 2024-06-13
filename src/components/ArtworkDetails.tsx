@@ -31,6 +31,7 @@ const ArtworkDetails = () => {
     );
   };
 
+  console.log("STATE", state.bookmarks);
   return (
     <View style={styles.container}>
       <Image

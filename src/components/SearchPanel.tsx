@@ -33,6 +33,7 @@ const SearchPanel = ({ loading }: { loading: boolean }) => {
         <TextInput
           style={styles.searchInput}
           placeholder="Search artworks"
+          testID="textInput"
           value={query}
           onChangeText={setQuery}
           onSubmitEditing={() => handleUpdateState("query", query)}
