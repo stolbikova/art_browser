@@ -8,7 +8,7 @@ import SearchPanel from "./SearchPanel";
 import styles from "../styles/artworksListStyles";
 
 const ArtworksList = () => {
-  const { artworks, loading, handleUpdateState, state } = useFetchArtworks();
+  const { artworks, loading, handleUpdateState, page } = useFetchArtworks();
 
   return (
     <View style={styles.container}>
@@ -23,12 +23,12 @@ const ArtworksList = () => {
       <View>
         <Button
           title="Previous"
-          onPress={() => handleUpdateState("page", state.page - 1)}
-          disabled={state.page === 1 || loading}
+          onPress={() => handleUpdateState("page", page - 1)}
+          disabled={page === 1 || loading}
         />
         <Button
           title="Next"
-          onPress={() => handleUpdateState("page", state.page + 1)}
+          onPress={() => handleUpdateState("page", page + 1)}
           disabled={loading}
         />
       </View>

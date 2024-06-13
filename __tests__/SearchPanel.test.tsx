@@ -1,15 +1,12 @@
 import React from "react";
-import {
-  fireEvent,
-  act,
-  waitFor,
-  render,
-  screen,
-} from "@testing-library/react-native";
+import { fireEvent, act, waitFor, render } from "@testing-library/react-native";
 
 import { fetchArtworks } from "../src/services/api";
-import { useAppContext } from "../src/contexts/AppContext";
+import useAppStore from "../src/store/useAppStore";
 import SearchPanel from "../src/components/SearchPanel";
+
+jest.mock("../src/services/api");
+jest.mock("../src/store/useAppStore");
 
 const mockArtworks = [
   {
@@ -23,14 +20,25 @@ const mockArtworks = [
   },
 ];
 
-const mockSetState = jest.fn();
+describe("SearchPanel Component", () => {
+  const mockSetQuery = jest.fn();
+  const mockSetPage = jest.fn();
 
-describe("ArtworksList Component", () => {
   beforeEach(() => {
     (fetchArtworks as jest.Mock).mockResolvedValue({ data: mockArtworks });
-    (useAppContext as jest.Mock).mockReturnValue({
-      state: { query: "", page: 1, publicDomain: false, onView: false },
-      setState: mockSetState,
+
+    const useStore = useAppStore;
+
+    useStore.setState({
+      query: "",
+      page: 1,
+      publicDomain: false,
+      onView: false,
+      setQuery: mockSetQuery,
+      setPage: mockSetPage,
+      setPublicDomain: jest.fn(),
+      setOnView: jest.fn(),
+      loadArtworks: jest.fn(),
     });
   });
 
@@ -38,13 +46,13 @@ describe("ArtworksList Component", () => {
     jest.clearAllMocks();
   });
 
-  test("renders ArtworksList correctly", async () => {
+  test("renders SearchPanel correctly", async () => {
     const { getByPlaceholderText } = render(<SearchPanel loading={false} />);
 
     const searchInput = getByPlaceholderText("Search artworks");
     expect(searchInput).toBeTruthy();
 
-    await act(() => {
+    await act(async () => {
       // Simulate a search action
       fireEvent.changeText(searchInput, "Mona Lisa");
       fireEvent(searchInput, "submitEditing");

@@ -1,13 +1,7 @@
 import "@testing-library/jest-native/extend-expect";
 import "react-native-gesture-handler/jestSetup";
 import mockAsyncStorage from "@react-native-async-storage/async-storage/jest/async-storage-mock";
-
-import {
-  toBeEmptyElement,
-  toHaveTextContent,
-} from "@testing-library/jest-native";
-
-expect.extend({ toBeEmptyElement, toHaveTextContent });
+// import { act } from "@testing-library/react-native";
 
 jest.mock("@react-native-async-storage/async-storage", () => mockAsyncStorage);
 
@@ -16,23 +10,6 @@ jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper");
 jest.mock("./src/services/api", () => ({
   fetchArtworks: jest.fn(),
 }));
-
-jest.mock("./src/contexts/AppContext", () => {
-  const originalModule = jest.requireActual("./src/contexts/AppContext");
-  return {
-    ...originalModule,
-    useAppContext: jest.fn(() => ({
-      state: {
-        query: "",
-        page: 1,
-        publicDomain: false,
-        onView: false,
-        bookmarks: new Map(),
-      },
-      setState: jest.fn(),
-    })),
-  };
-});
 
 jest.mock("@react-navigation/native", () => {
   const actualNav = jest.requireActual("@react-navigation/native");
@@ -52,5 +29,40 @@ jest.mock("@react-navigation/native", () => {
         },
       },
     }),
+  };
+});
+
+jest.mock("./src/store/useAppStore", () => {
+  const create = require("zustand").create;
+
+  const mockStore = {
+    query: "",
+    page: 1,
+    publicDomain: false,
+    onView: false,
+    artworks: [],
+    bookmarks: new Map(),
+    loading: false,
+    setQuery: jest.fn(),
+    setPage: jest.fn(),
+    setPublicDomain: jest.fn(),
+    setOnView: jest.fn(),
+    addBookmark: jest.fn(),
+    removeBookmark: jest.fn(),
+    initializeBookmarks: jest.fn(),
+    loadArtworks: jest.fn(),
+  };
+
+  const useStore = create(() => mockStore);
+
+  useStore.setState = (state) => {
+    // act(() => {
+    Object.assign(mockStore, state);
+    // });
+  };
+
+  return {
+    __esModule: true,
+    default: useStore,
   };
 });

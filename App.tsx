@@ -9,7 +9,6 @@ import Icon from "react-native-vector-icons/Ionicons";
 import ArtworksList from "./src/components/ArtworksList";
 import ArtworkDetails from "./src/components/ArtworkDetails";
 import Bookmarks from "./src/components/Bookmarks";
-import { AppProvider } from "./src/contexts/AppContext";
 import { Artwork } from "./src/types";
 
 export type RootStackParamList = {
@@ -38,39 +37,39 @@ const ArtworksStack = () => (
 
 const App = () => {
   return (
-    <AppProvider>
-      <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName;
+    // <AppProvider>
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
 
-              if (route.name === "Home") {
-                iconName = focused ? "home" : "home-outline";
-              } else if (route.name === "Bookmarks") {
-                iconName = focused ? "bookmark" : "bookmark-outline";
-              }
+            if (route.name === "Home") {
+              iconName = focused ? "home" : "home-outline";
+            } else if (route.name === "Bookmarks") {
+              iconName = focused ? "bookmark" : "bookmark-outline";
+            }
 
-              if (iconName)
-                return <Icon name={iconName} size={size} color={color} />;
-            },
-          })}
-        >
-          <Tab.Screen
-            name="Home"
-            options={{
-              headerShown: false,
-            }}
-            component={ArtworksStack}
-          />
-          <Tab.Screen
-            name="Bookmarks"
-            component={gestureHandlerRootHOC(Bookmarks)}
-            options={{ title: "Bookmarks" }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </AppProvider>
+            if (iconName)
+              return <Icon name={iconName} size={size} color={color} />;
+          },
+        })}
+      >
+        <Tab.Screen
+          name="Home"
+          options={{
+            headerShown: false,
+          }}
+          component={ArtworksStack}
+        />
+        <Tab.Screen
+          name="Bookmarks"
+          component={gestureHandlerRootHOC(Bookmarks)}
+          options={{ title: "Bookmarks" }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+    // </AppProvider>
   );
 };
 

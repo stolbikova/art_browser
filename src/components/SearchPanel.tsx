@@ -1,3 +1,4 @@
+// src/components/SearchPanel.tsx
 import React, { useState } from "react";
 import {
   View,
@@ -8,23 +9,40 @@ import {
   Image,
 } from "react-native";
 
-import { useAppContext } from "../contexts/AppContext";
+import useAppStore from "../store/useAppStore";
 
 import styles from "../styles/artworksListStyles";
 
 const DEFAULT_PAGE = 1;
 
 const SearchPanel = ({ loading }: { loading: boolean }) => {
-  const { state, setState } = useAppContext();
+  const {
+    query: storeQuery,
+    publicDomain,
+    onView,
+    setQuery,
+    setPage,
+    setPublicDomain,
+    setOnView,
+  } = useAppStore();
 
-  const [query, setQuery] = useState<string>(state.query);
+  const [query, setLocalQuery] = useState<string>(storeQuery);
 
   const handleUpdateState = (type: string, value: any) => {
-    setState((prev) => ({
-      ...prev,
-      [type]: value,
-      ...(type !== "page" && { page: DEFAULT_PAGE }),
-    }));
+    switch (type) {
+      case "query":
+        setQuery(value);
+        setPage(DEFAULT_PAGE);
+        break;
+      case "publicDomain":
+        setPublicDomain(value);
+        setPage(DEFAULT_PAGE);
+        break;
+      case "onView":
+        setOnView(value);
+        setPage(DEFAULT_PAGE);
+        break;
+    }
   };
 
   return (
@@ -35,7 +53,7 @@ const SearchPanel = ({ loading }: { loading: boolean }) => {
           placeholder="Search artworks"
           testID="textInput"
           value={query}
-          onChangeText={setQuery}
+          onChangeText={setLocalQuery}
           onSubmitEditing={() => handleUpdateState("query", query)}
         />
         <TouchableOpacity onPress={() => handleUpdateState("query", query)}>
@@ -49,14 +67,14 @@ const SearchPanel = ({ loading }: { loading: boolean }) => {
         <View>
           <Text style={styles.filterLabel}>Public Domain</Text>
           <Switch
-            value={state.publicDomain}
+            value={publicDomain}
             onValueChange={(value) => handleUpdateState("publicDomain", value)}
           />
         </View>
         <View>
           <Text style={styles.filterLabel}>On View</Text>
           <Switch
-            value={state.onView}
+            value={onView}
             onValueChange={(value) => handleUpdateState("onView", value)}
           />
         </View>

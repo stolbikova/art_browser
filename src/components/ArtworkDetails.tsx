@@ -1,10 +1,9 @@
 import React from "react";
 import { View, Text, Button, Image } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RouteProp, useRoute } from "@react-navigation/native";
 
 import { RootStackParamList } from "../../App";
-import { useAppContext } from "../contexts/AppContext";
+import useAppStore from "../store/useAppStore";
 
 import styles from "../styles/artworkDetailsStyles";
 
@@ -13,25 +12,17 @@ type ArtworkDetailsRouteProp = RouteProp<RootStackParamList, "ArtworkDetails">;
 const ArtworkDetails = () => {
   const route = useRoute<ArtworkDetailsRouteProp>();
   const { artwork } = route.params;
-  const { state, setState } = useAppContext();
+  const { bookmarks, addBookmark, removeBookmark } = useAppStore();
 
-  const handleBookmarkToggle = async () => {
-    const newBookmarks = new Map(state.bookmarks);
-
-    if (!newBookmarks.has(artwork.id)) {
-      newBookmarks.set(artwork.id, artwork);
+  console.log("ARTWORK", artwork);
+  const handleBookmarkToggle = () => {
+    if (bookmarks.has(artwork.id)) {
+      removeBookmark(artwork.id);
     } else {
-      newBookmarks.delete(artwork.id);
+      addBookmark(artwork);
     }
-
-    setState((prev) => ({ ...prev, bookmarks: newBookmarks }));
-    await AsyncStorage.setItem(
-      "bookmarks",
-      JSON.stringify(Array.from(newBookmarks.values()))
-    );
   };
 
-  console.log("STATE", state.bookmarks);
   return (
     <View style={styles.container}>
       <Image
@@ -47,7 +38,7 @@ const ArtworkDetails = () => {
       <Text>{artwork.title}</Text>
       <View style={styles.buttonWrap}>
         <Button
-          title={state.bookmarks.has(artwork.id) ? "Unbookmark" : "Bookmark"}
+          title={bookmarks.has(artwork.id) ? "Unbookmark" : "Bookmark"}
           onPress={handleBookmarkToggle}
         />
       </View>
